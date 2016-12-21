@@ -14,7 +14,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 		private final EventListeners<E> listeners;
 
 		private ProxyDispatcher(Class<E> eventListenerType) {
-				this.listeners = new EventListeners<E>(8);
+				this.listeners = new EventListeners<>(8);
 				this.delegateProxy = createProxy(eventListenerType);
 		}
 
@@ -48,7 +48,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 
 				private final EventListeners<E> listeners;
 
-				public DispatchHandler(final EventListeners<E> listeners) {
+				DispatchHandler(final EventListeners<E> listeners) {
 						this.listeners = listeners;
 				}
 
@@ -56,17 +56,21 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
 						final Class<?> returnType = method.getReturnType();
-						if (returnType == Boolean.TYPE) {
-								return invokeBoolean(proxy, method, args);
-						} else if (returnType == Void.TYPE) {
-								return invokeVoid(proxy, method, args);
+						try {
+								if (returnType == Boolean.TYPE) {
+										return invokeBoolean(method, args);
+								} else if (returnType == Void.TYPE) {
+										return invokeVoid(method, args);
+								}
+						} catch (InvocationTargetException ite) {
+								throw ite.getCause();
 						}
 
 						throw new UnsupportedOperationException(
 								"cannot invoke method with return type of '" + returnType.getSimpleName() + "'");
 				}
 
-				private Object invokeVoid(final Object proxy, final Method method, final Object[] args) throws Throwable {
+				private Object invokeVoid(final Method method, final Object[] args) throws InvocationTargetException {
 
 						Throwable aggregatedThrowable = null;
 
@@ -77,7 +81,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										method.invoke(listener, args);
 								} catch (IllegalAccessException | IllegalArgumentException e) {
 										throwable = e;
-								} catch (InvocationTargetException e) {										throwable = e.getCause();
+								} catch (InvocationTargetException e) {
+										throwable = e.getCause();
 								} finally {
 										if (throwable != null) {
 												if (aggregatedThrowable == null) {
@@ -90,13 +95,13 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						}
 
 						if (aggregatedThrowable != null) {
-								throw aggregatedThrowable;
+								throw new InvocationTargetException(aggregatedThrowable);
 						}
 
 						return null;
 				}
 
-				private Object invokeBoolean(final Object proxy, final Method method, final Object[] args) throws Throwable {
+				private Object invokeBoolean(final Method method, final Object[] args) throws InvocationTargetException {
 
 						Throwable aggregatedThrowable = null;
 
@@ -126,7 +131,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						}
 
 						if (aggregatedThrowable != null) {
-								throw aggregatedThrowable;
+								throw new InvocationTargetException(aggregatedThrowable);
 						}
 
 						return result;
