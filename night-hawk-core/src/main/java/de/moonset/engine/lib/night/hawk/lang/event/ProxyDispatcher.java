@@ -78,7 +78,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 								"cannot invoke method with return type of '" + returnType.getSimpleName() + "'");
 				}
 
-				private Object invokeVoid(final Method method, final Object[] args) throws InvocationTargetException {
+				private Object invokeVoid(final Method method, final Object[] args)
+						throws InvocationTargetException, IllegalAccessException {
 
 						Throwable aggregatedThrowable = null;
 
@@ -87,8 +88,6 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 
 								try {
 										method.invoke(listener, args);
-								} catch (IllegalAccessException | IllegalArgumentException e) {
-										throwable = e;
 								} catch (InvocationTargetException e) {
 										LOGGER.error(EVENT,
 										             "cannot dispatch {}::{}(...) on {}",
@@ -115,7 +114,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						return null;
 				}
 
-				private Object invokeBoolean(final Method method, final Object[] args) throws InvocationTargetException {
+				private Object invokeBoolean(final Method method, final Object[] args)
+						throws InvocationTargetException, IllegalAccessException {
 
 						Throwable aggregatedThrowable = null;
 
@@ -127,9 +127,6 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 
 								try {
 										result &= (boolean) method.invoke(listener, args);
-								} catch (IllegalAccessException | IllegalArgumentException e) {
-										result = false;
-										throwable = e;
 								} catch (InvocationTargetException e) {
 										LOGGER.error(EVENT,
 										             "cannot dispatch {}::{}(...) on {}",
