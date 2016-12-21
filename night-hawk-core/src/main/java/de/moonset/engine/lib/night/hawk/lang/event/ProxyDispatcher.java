@@ -1,5 +1,10 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,6 +14,9 @@ import java.lang.reflect.Proxy;
  * Created by pitt on 17.12.16.
  */
 public final class ProxyDispatcher<E> implements EventDispatcher<E> {
+
+		private static final Logger LOGGER = LoggerFactory.getLogger(ProxyDispatcher.class);
+		private static final Marker EVENT  = MarkerFactory.getMarker("EVENT");
 
 		private final E                 delegateProxy;
 		private final EventListeners<E> listeners;
@@ -82,6 +90,12 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 								} catch (IllegalAccessException | IllegalArgumentException e) {
 										throwable = e;
 								} catch (InvocationTargetException e) {
+										LOGGER.error(EVENT,
+										             "cannot dispatch {}::{}(...) on {}",
+										             listener.getClass().getSimpleName(),
+										             method.getName(),
+										             listener,
+										             e);
 										throwable = e.getCause();
 								} finally {
 										if (throwable != null) {
@@ -117,6 +131,12 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										result = false;
 										throwable = e;
 								} catch (InvocationTargetException e) {
+										LOGGER.error(EVENT,
+										             "cannot dispatch {}::{}(...) on {}",
+										             listener.getClass().getSimpleName(),
+										             method.getName(),
+										             listener,
+										             e);
 										result = false;
 										throwable = e.getCause();
 								} finally {

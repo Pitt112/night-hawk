@@ -24,6 +24,12 @@ public class ProxyDispatcherTest {
 				assertThat(count.get()).isEqualTo(2);
 		}
 
+		@Test
+		public void delegateEmptyDispatch() throws Exception {
+				final EventDispatcher<EventListener> dispatcher = ProxyDispatcher.create(EventListener.class);
+				assertThat(dispatcher.delegate().testBoolean()).isFalse();
+				dispatcher.delegate().testVoid();
+		}
 
 		@Test(expected = UnsupportedOperationException.class)
 		public void delegateObject() throws Exception {
