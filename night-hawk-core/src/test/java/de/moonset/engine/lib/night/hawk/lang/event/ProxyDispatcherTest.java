@@ -20,7 +20,7 @@ public class ProxyDispatcherTest {
 				assertThat(dispatcher.addListener(new EventReceiver(count))).isTrue();
 
 				assertThat(count.get()).isEqualTo(0);
-				assertThat(dispatcher.delegate().testBoolean());
+				assertThat(dispatcher.delegate().testBoolean()).isTrue();
 				assertThat(count.get()).isEqualTo(2);
 		}
 
@@ -49,12 +49,71 @@ public class ProxyDispatcherTest {
 		@Test
 		public void testAddRemove() throws Exception {
 				final EventDispatcher<EventListener> dispatcher = ProxyDispatcher.create(EventListener.class);
-				final EventReceiver listener = new EventReceiver(null);
+				final EventListener                  listener   = new EventReceiver(null);
 				assertThat(dispatcher.addListener(listener)).isTrue();
 				assertThat(dispatcher.addListener(listener)).isFalse();
 				assertThat(dispatcher.removeListener(listener)).isTrue();
 				assertThat(dispatcher.removeListener(listener)).isFalse();
 		}
+
+		@Test(expected = IllegalStateException.class)
+		public void testThrowSingleBoolean() {
+				final AtomicInteger count = new AtomicInteger();
+				try {
+						final EventDispatcher<EventListener> dispatcher = ProxyDispatcher.create(EventListener.class);
+						final EventListener                  listener   = new EventReceiver(count);
+						final EventListener                  throwing   = new ThrowingReceiver();
+
+						dispatcher.addListener(listener);
+						dispatcher.addListener(throwing);
+
+						dispatcher.delegate().testBoolean();
+				} finally {
+						assertThat(count.get()).isEqualTo(1);
+				}
+		}
+
+		@Test(expected = IllegalStateException.class)
+		public void testThrowAggregateBoolean() {
+				final AtomicInteger count = new AtomicInteger();
+				try {
+						final EventDispatcher<EventListener> dispatcher = ProxyDispatcher.create(EventListener.class);
+						final EventListener                  listener   = new EventReceiver(count);
+						final EventListener                  throwing   = new ThrowingReceiver();
+						final EventListener                  throwing2  = new ThrowingReceiver();
+
+						dispatcher.addListener(listener);
+						dispatcher.addListener(throwing);
+						dispatcher.addListener(throwing2);
+
+						dispatcher.delegate().testBoolean();
+				} catch (IllegalStateException ise) {
+						assertThat(ise.getSuppressed()).hasSize(1);
+						assertThat(count.get()).isEqualTo(1);
+						throw ise;
+				} finally {
+						assertThat(count.get()).isEqualTo(1);
+				}
+		}
+
+
+		@Test(expected = IllegalStateException.class)
+		public void testThrowSingleVoid() {
+				final AtomicInteger count = new AtomicInteger();
+				try {
+						final EventDispatcher<EventListener> dispatcher = ProxyDispatcher.create(EventListener.class);
+						final EventListener                  listener   = new EventReceiver(count);
+						final EventListener                  throwing   = new ThrowingReceiver();
+
+						dispatcher.addListener(listener);
+						dispatcher.addListener(throwing);
+
+						dispatcher.delegate().testVoid();
+				} finally {
+						assertThat(count.get()).isEqualTo(1);
+				}
+		}
+
 
 		private interface EventListener {
 				boolean testBoolean();
@@ -62,6 +121,24 @@ public class ProxyDispatcherTest {
 				void testVoid();
 
 				Object testObject();
+		}
+
+
+		private static class ThrowingReceiver implements EventListener {
+				@Override
+				public boolean testBoolean() {
+						throw new IllegalStateException();
+				}
+
+				@Override
+				public void testVoid() {
+						throw new IllegalStateException();
+				}
+
+				@Override
+				public Object testObject() {
+						throw new IllegalStateException();
+				}
 		}
 
 
