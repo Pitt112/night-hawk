@@ -29,7 +29,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 		}
 
 		@NotNull
-		private static <T> EventDispatcher<T> create(Class<T> eventListenerType) {
+		public static <T> EventDispatcher<T> create(Class<T> eventListenerType) {
 				return new ProxyDispatcher<>(eventListenerType);
 		}
 
