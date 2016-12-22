@@ -33,17 +33,6 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				return new ProxyDispatcher<>(eventListenerType);
 		}
 
-		@Nullable
-		private static Throwable packThrowables(@Nullable Throwable existing, @NotNull Throwable thrown) {
-
-				if (existing != null) {
-						existing.addSuppressed(thrown);
-						return existing;
-				}
-
-				return thrown;
-		}
-
 		private E createProxy(final Class<E> eventListenerType) {
 				final Object proxy = Proxy.newProxyInstance(eventListenerType.getClassLoader(),
 				                                            new Class<?>[] {eventListenerType},
@@ -75,6 +64,17 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						this.listeners = listeners;
 				}
 
+				@Nullable
+				private static Throwable packThrowables(@Nullable Throwable existing, @NotNull Throwable thrown) {
+
+						if (existing != null) {
+								existing.addSuppressed(thrown);
+								return existing;
+						}
+
+						return thrown;
+				}
+
 				@Override
 				public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
@@ -86,7 +86,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										return invokeVoid(method, args);
 								}
 						} catch (InvocationTargetException ite) {
-								LOGGER.error(EVENT, "cannot dispatch {}::{}(...) on {}", method.getName(), ite);
+								LOGGER.error(EVENT, "cannot dispatch method {}", method.getName(), ite);
 
 								throw ite.getCause();
 						}
