@@ -1,5 +1,6 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -30,6 +31,17 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				return new ProxyDispatcher<>(eventListenerType);
 		}
 
+		@Nullable
+		private static Throwable packThrowables(@Nullable Throwable existing, @Nullable Throwable thrown) {
+
+				if (existing != null) {
+						existing.addSuppressed(thrown);
+						return existing;
+				}
+
+				return thrown;
+		}
+
 		private E createProxy(final Class<E> eventListenerType) {
 				final Object proxy = Proxy.newProxyInstance(eventListenerType.getClassLoader(),
 				                                            new Class<?>[] {eventListenerType},
@@ -52,6 +64,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				return listeners.remove(listener);
 		}
 
+
 		private static class DispatchHandler<E> implements InvocationHandler {
 
 				private final EventListeners<E> listeners;
@@ -71,6 +84,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										return invokeVoid(method, args);
 								}
 						} catch (InvocationTargetException ite) {
+								LOGGER.error(EVENT, "cannot dispatch {}::{}(...) on {}", method.getName(), ite);
+
 								throw ite.getCause();
 						}
 
@@ -81,10 +96,9 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				private Object invokeVoid(final Method method, final Object[] args)
 						throws InvocationTargetException, IllegalAccessException {
 
-						Throwable aggregatedThrowable = null;
+						Throwable throwable = null;
 
 						for (E listener : listeners) {
-								Throwable throwable = null;
 
 								try {
 										method.invoke(listener, args);
@@ -95,20 +109,13 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										             method.getName(),
 										             listener,
 										             e);
-										throwable = e.getCause();
-								} finally {
-										if (throwable != null) {
-												if (aggregatedThrowable == null) {
-														aggregatedThrowable = throwable;
-												} else {
-														aggregatedThrowable.addSuppressed(throwable);
-												}
-										}
+
+										throwable = packThrowables(throwable, e.getCause());
 								}
 						}
 
-						if (aggregatedThrowable != null) {
-								throw new InvocationTargetException(aggregatedThrowable);
+						if (throwable != null) {
+								throw new InvocationTargetException(throwable);
 						}
 
 						return null;
@@ -117,13 +124,10 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				private Object invokeBoolean(final Method method, final Object[] args)
 						throws InvocationTargetException, IllegalAccessException {
 
-						Throwable aggregatedThrowable = null;
-
 						boolean result = listeners.size() > 0;
 
-
+						Throwable throwable = null;
 						for (E listener : listeners) {
-								Throwable throwable = null;
 
 								try {
 										result &= (boolean) method.invoke(listener, args);
@@ -135,20 +139,13 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										             listener,
 										             e);
 										result = false;
-										throwable = e.getCause();
-								} finally {
-										if (throwable != null) {
-												if (aggregatedThrowable == null) {
-														aggregatedThrowable = throwable;
-												} else {
-														aggregatedThrowable.addSuppressed(throwable);
-												}
-										}
+
+										throwable = packThrowables(throwable, e.getCause());
 								}
 						}
 
-						if (aggregatedThrowable != null) {
-								throw new InvocationTargetException(aggregatedThrowable);
+						if (throwable != null) {
+								throw new InvocationTargetException(throwable);
 						}
 
 						return result;
