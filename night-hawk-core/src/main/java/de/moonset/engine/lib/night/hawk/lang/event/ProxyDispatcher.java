@@ -1,5 +1,6 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +28,13 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 				this.delegateProxy = createProxy(eventListenerType);
 		}
 
-		public static <T> EventDispatcher<T> create(Class<T> eventListenerType) {
+		@NotNull
+		private static <T> EventDispatcher<T> create(Class<T> eventListenerType) {
 				return new ProxyDispatcher<>(eventListenerType);
 		}
 
 		@Nullable
-		private static Throwable packThrowables(@Nullable Throwable existing, @Nullable Throwable thrown) {
+		private static Throwable packThrowables(@Nullable Throwable existing, @NotNull Throwable thrown) {
 
 				if (existing != null) {
 						existing.addSuppressed(thrown);
