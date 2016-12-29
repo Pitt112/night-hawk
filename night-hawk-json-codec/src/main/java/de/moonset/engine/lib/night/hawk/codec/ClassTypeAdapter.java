@@ -3,6 +3,7 @@ package de.moonset.engine.lib.night.hawk.codec;
 import com.google.common.base.Preconditions;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -22,25 +23,21 @@ public class ClassTypeAdapter extends TypeAdapter<Class<?>> {
 
 		@Override
 		public void write(final JsonWriter out, final Class<?> type) throws IOException {
-				out.beginObject();
-				out.name("type");
-				out.value(type.getCanonicalName());
-				out.endObject();
+				if (type != null) {
+						out.value(type.getCanonicalName());
+				} else {
+						out.nullValue();
+				}
 		}
 
 		@Override
 		public Class<?> read(final JsonReader in) throws IOException {
 
-				Class<?> type = null;
-
-				in.beginObject();
-				if (in.hasNext()) {
-						if ("type".equals(in.nextName())) {
-								type = types.get(in.nextString());
-						}
+				if (in.peek() == JsonToken.NULL) {
+						in.nextNull();
+						return null;
 				}
-				in.endObject();
 
-				return type;
+				return types.get(in.nextString());
 		}
 }
