@@ -1,4 +1,4 @@
-package de.moonset.engine.lib.night.hawk.codec;
+package de.moonset.engine.lib.night.hawk.codec.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,7 +23,7 @@ public class ClassTypeAdapterTest {
 						.create();
 
 				final String actual   = gson.toJson(this.getClass());
-				final String expected = "\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"";
+				final String expected = "\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"";
 
 				assertThat(actual).isEqualToIgnoringWhitespace(expected);
 		}
@@ -75,7 +75,7 @@ public class ClassTypeAdapterTest {
 						new GsonBuilder().registerTypeHierarchyAdapter(Class.class, new ClassTypeAdapter(types)).create();
 
 				final Class<?> actual =
-						gson.fromJson("\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"", Class.class);
+						gson.fromJson("\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"", Class.class);
 				final Class<?> expected = this.getClass();
 
 				assertThat(actual).isEqualTo(expected);
@@ -103,7 +103,7 @@ public class ClassTypeAdapterTest {
 
 
 				final SinglePojo actual = gson.fromJson(
-						"{\"single\":\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"}",
+						"{\"single\":\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"}",
 						SinglePojo.class);
 				final SinglePojo expected = new SinglePojo(getClass());
 
@@ -120,7 +120,8 @@ public class ClassTypeAdapterTest {
 
 				final SinglePojo pojo     = new SinglePojo(this.getClass());
 				final String     actual   = gson.toJson(pojo);
-				final String     expected = "{\"single\":\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"}";
+				final String     expected =
+						"{\"single\":\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"}";
 
 				assertThat(actual).isEqualToIgnoringWhitespace(expected);
 		}
@@ -135,7 +136,7 @@ public class ClassTypeAdapterTest {
 				final ArrayPojo pojo   = new ArrayPojo(this.getClass(), this.getClass());
 				final String    actual = gson.toJson(pojo);
 				final String expected =
-						"{\"multiple\":[\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\",\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"]}";
+						"{\"multiple\":[\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\",\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"]}";
 
 				assertThat(actual).isEqualToIgnoringWhitespace(expected);
 		}
@@ -149,7 +150,7 @@ public class ClassTypeAdapterTest {
 
 				final ArrayPojo expected = new ArrayPojo(this.getClass(), this.getClass());
 				final ArrayPojo actual = gson.fromJson(
-						"{\"multiple\":[\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\",\"de.moonset.engine.lib.night.hawk.codec.ClassTypeAdapterTest\"]}",
+						"{\"multiple\":[\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\",\"de.moonset.engine.lib.night.hawk.codec.adapter.ClassTypeAdapterTest\"]}",
 						ArrayPojo.class);
 
 				assertThat(actual).isEqualToComparingFieldByField(expected);

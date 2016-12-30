@@ -1,4 +1,4 @@
-package de.moonset.engine.lib.night.hawk.codec;
+package de.moonset.engine.lib.night.hawk.codec.adapter;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.TypeAdapter;
