@@ -1,5 +1,7 @@
 #!groovy
 
 node {
-    echo 'Hello World'
+    stage('Build') {
+        sh "'${mvnHome}/bin/mvn' clean compile"
+    }
 }
