@@ -9,6 +9,7 @@ node {
         mvnHome = tool 'M3'
     }
     stage('Build') {
+        echo env.WORKSPACE
         sh "echo ${pwd}"
         sh "'${mvnHome}/bin/mvn' clean compile"
         input 'Test?'
