@@ -2,16 +2,18 @@
 
 node {
     def mvnHome
+    def workspace
+
     stage('Preparation') {
         // Get the Maven tool.
         // ** NOTE: This 'M3' Maven tool must be configured
         // **       in the global configuration.
         mvnHome = tool 'M3'
+        workspace = pwd
     }
     stage('Build') {
         echo env.WORKSPACE
-        sh "echo ${pwd}"
-        sh "'${mvnHome}/bin/mvn' clean compile"
+        sh "cd ${workspace} && '${mvnHome}/bin/mvn' clean compile"
         input 'Test?'
     }
 
