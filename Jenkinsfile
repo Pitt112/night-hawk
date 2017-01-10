@@ -12,7 +12,7 @@ node {
         workspace = pwd
     }
     stage('Build') {
-        echo env.WORKSPACE
+        dir env.WORKSPACE
         sh "cd ${workspace} && '${mvnHome}/bin/mvn' clean compile"
         input 'Test?'
     }
