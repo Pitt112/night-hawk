@@ -10,9 +10,10 @@ node {
     }
     stage('Build') {
         sh "'${mvnHome}/bin/mvn' clean compile"
+        input 'Test?'
     }
 
-    stage('Build') {
+    stage('Test') {
         // Run the maven build
         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore test"
     }
