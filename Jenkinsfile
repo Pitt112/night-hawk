@@ -13,7 +13,7 @@ node {
     }
     stage('Build') {
         dir(env.WORKSPACE) {
-            sh "cd ${workspace} && '${mvnHome}/bin/mvn' clean compile"
+            sh "cd ${workspace} && pwd && '${mvnHome}/bin/mvn' clean compile"
         }
         input 'Test?'
     }
