@@ -11,6 +11,11 @@ node {
         mvnHome = tool 'M3'
         workspace = pwd
     }
+
+    stage('Checkout') {
+        checkout scm
+    }
+
     stage('Build') {
         dir(env.WORKSPACE) {
             sh "pwd && '${mvnHome}/bin/mvn' clean compile"
