@@ -3,6 +3,12 @@
 node {
     def mvnHome
     def workspace
+    def pom
+    def version
+
+    stage('Checkout') {
+        checkout scm
+    }
 
     stage('Preparation') {
         // Get the Maven tool.
@@ -10,10 +16,8 @@ node {
         // **       in the global configuration.
         mvnHome = tool 'M3'
         workspace = pwd
-    }
-
-    stage('Checkout') {
-        checkout scm
+        pom = readMavenPom file: 'pom.xml'
+        version = pom.version.replace("-SNAPSHOT", ".${currentBuild.number}")
     }
 
     stage('Build') {
