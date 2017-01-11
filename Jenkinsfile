@@ -27,4 +27,8 @@ node {
         // Run the maven build
         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore test"
     }
+
+    stage('Results') {
+        junit '**/target/surefire-reports/TEST-*.xml'
+    }
 }
