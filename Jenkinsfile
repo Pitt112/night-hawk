@@ -29,7 +29,7 @@ node {
 
     stage('Test') {
         // Run the maven build
-        sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore test"
+        sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore org.jacoco:jacoco-maven-plugin:prepare-agent test"
     }
 
     stage('Results') {
