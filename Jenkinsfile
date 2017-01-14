@@ -22,17 +22,17 @@ node {
 
     stage('Build') {
         dir(env.WORKSPACE) {
-            sh "pwd && '${mvnHome}/bin/mvn' clean compile"
+            sh "'${mvnHome}/bin/mvn' clean compile -B -V"
         }
-        input 'Test?'
     }
 
     stage('Test') {
         // Run the maven build
-        sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore org.jacoco:jacoco-maven-plugin:prepare-agent test"
+        sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore org.jacoco:jacoco-maven-plugin:prepare-agent test -B -V"
     }
 
     stage('Results') {
+        step([$class: 'JacocoPublisher'])
         junit '**/target/surefire-reports/TEST-*.xml'
     }
 }
