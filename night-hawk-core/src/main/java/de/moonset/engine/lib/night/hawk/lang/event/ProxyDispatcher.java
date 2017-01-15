@@ -1,5 +1,6 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
+import de.moonset.engine.lib.night.hawk.lang.Utility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import java.lang.reflect.Proxy;
 /**
  * Created by pitt on 17.12.16.
  */
+
+@Utility
 public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(ProxyDispatcher.class);
@@ -22,6 +25,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 
 		private final E                 delegateProxy;
 		private final EventListeners<E> listeners;
+
+		private ProxyDispatcher() { throw new UnsupportedOperationException(); }
 
 		private ProxyDispatcher(Class<E> eventListenerType) {
 				this.listeners = new EventListeners<>(8);

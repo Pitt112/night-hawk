@@ -9,9 +9,10 @@ import java.util.Set;
 /**
  * Created by pitt on 15.12.16.
  */
-public class BitMasks {
+@Utility
+public final class BitMasks {
 
-		private BitMasks() { }
+		private BitMasks() { throw new UnsupportedOperationException(); }
 
 		public static <E extends Enum<E> & BitMaskFlag> Set<E> toSet(Class<E> type, long bitmask) {
 
