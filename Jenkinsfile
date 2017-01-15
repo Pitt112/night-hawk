@@ -21,14 +21,33 @@ node {
     }
 
     stage('Build') {
-        dir(env.WORKSPACE) {
-            sh "'${mvnHome}/bin/mvn' clean compile -B -V"
+        withMaven(
+                maven: 'M3',
+                mavenSettingsConfig: 'global') {
+
+            // Run the maven build
+            sh "mvn clean compile -B -V"
         }
     }
 
     stage('Test') {
-        // Run the maven build
-        sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore org.jacoco:jacoco-maven-plugin:prepare-agent test -B -V"
+        withMaven(
+                maven: 'M3',
+                mavenSettingsConfig: 'global') {
+
+            // Run the maven build
+            sh "mvn -Dmaven.test.failure.ignore org.jacoco:jacoco-maven-plugin:prepare-agent test -B -V"
+        }
+    }
+
+    parallel 'Quality scan': {
+        withMaven(
+                maven: 'M3',
+                mavenSettingsConfig: 'global') {
+
+            // Run the maven build
+            sh "mvn sonar:sonar -B -V"
+        }
     }
 
     stage('Results') {
