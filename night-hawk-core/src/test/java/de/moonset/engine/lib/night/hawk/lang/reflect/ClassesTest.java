@@ -27,4 +27,13 @@ public class ClassesTest {
 				assertThat(Classes.isAssignable(Executable.class, AccessibleObject.class)).isFalse();
 				assertThat(Classes.isAssignable(Executable.class, Runnable.class)).isFalse();
 		}
+
+		@Test
+		public void testAssignableArray() {
+				Class<?>[] a = new Class<?>[] {Boolean.class, int.class, String.class};
+				Class<?>[] b = new Class<?>[] {boolean.class, int.class, String.class};
+
+				assertThat(Classes.isAssignable(a, b)).isTrue();
+				assertThat(Classes.isAssignable(b, a)).isFalse();
+		}
 }

@@ -1,6 +1,8 @@
 package de.moonset.engine.lib.night.hawk.lang.reflect;
 
+import com.google.common.base.Preconditions;
 import com.google.common.primitives.Primitives;
+import de.moonset.engine.lib.night.hawk.lang.Arrays;
 import de.moonset.engine.lib.night.hawk.lang.Utility;
 
 /**
@@ -23,5 +25,11 @@ public final class Classes {
 				return false;
 		}
 
+		public static boolean isAssignable(Class<?>[] to, Class<?>[] from) {
+				Preconditions.checkNotNull(to, "to");
+				Preconditions.checkNotNull(from, "from");
+				Preconditions.checkArgument(to.length == from.length, "'to' and 'from' array differ in length");
 
+				return Arrays.matches(to, from, Classes::isAssignable);
+		}
 }
