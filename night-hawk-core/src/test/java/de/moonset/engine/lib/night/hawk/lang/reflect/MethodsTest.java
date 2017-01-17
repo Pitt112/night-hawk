@@ -13,16 +13,16 @@ public class MethodsTest {
 
 		@Test
 		public void isAbstract() throws Exception {
-				final Method method = Methods.getMethodByName(TestInterface.class, "test")[0];
+				final Method method = Methods.getMethodsByName(TestInterface.class, "test")[0];
 				assertThat(Methods.isAbstract(method)).isTrue();
 
-				final Method other = Methods.getMethodByName(TestInterface.class, "testDefault")[0];
+				final Method other = Methods.getMethodsByName(TestInterface.class, "testDefault")[0];
 				assertThat(Methods.isAbstract(other)).isFalse();
 		}
 
 		@Test
 		public void testGetMethods() throws Exception {
-				final Method[] actual = Methods.getMethodByName(TestInterface.class, "testDefault");
+				final Method[] actual = Methods.getMethodsByName(TestInterface.class, "testDefault");
 				assertThat(actual).isNotEmpty();
 				assertThat(actual.length).isEqualTo(1);
 				assertThat(actual[0].getName()).isEqualTo("testDefault");

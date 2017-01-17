@@ -22,9 +22,10 @@ public final class Methods {
 				return Modifier.isAbstract(method.getModifiers());
 		}
 
-		public static Method[] getMethodByName(final Class<?> clazz, final String methodName) {
+		public static Method[] getMethodsByName(final Class<?> clazz, final String methodName) {
 
 				Preconditions.checkNotNull(clazz, "clazz");
+				Preconditions.checkNotNull(methodName, "methodName");
 
 				final Method[] methods = clazz.getMethods();
 				return Stream.of(methods).filter(m -> m.getName().equals(methodName)).toArray(Method[]::new);
