@@ -29,7 +29,7 @@ public class UtilityTest {
 				final Set<Class<?>> types = reflections.getTypesAnnotatedWith(Utility.class);
 
 				for (Class<?> type : types) {
-						LOGGER.info(UTILITY, "checking '{}'", type.getSimpleName());
+						LOGGER.info(UTILITY, "checking '{}' utility", type.getSimpleName());
 
 						final Constructor<?> constructor = type.getDeclaredConstructor();
 
