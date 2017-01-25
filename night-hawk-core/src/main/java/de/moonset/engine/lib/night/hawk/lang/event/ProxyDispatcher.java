@@ -1,5 +1,6 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
+import de.moonset.engine.lib.night.hawk.lang.InvisibleMethodError;
 import de.moonset.engine.lib.night.hawk.lang.Utility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,15 +93,13 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						} catch (InvocationTargetException ite) {
 								LOGGER.error(EVENT, "cannot dispatch method {}", method.getName(), ite);
 								throw ite.getCause();
-						} catch (IllegalAccessException iac) {
-								throw new Error("method became invisible " + method.getName(), iac);
 						}
 
 						throw new UnsupportedOperationException(
 								"cannot invoke method with return type of '" + returnType.getSimpleName() + "'");
 				}
 
-				private Object invokeVoid(final Method method, final Object[] args) throws Throwable {
+				private Object invokeVoid(final Method method, final Object[] args) throws InvocationTargetException {
 
 						Throwable throwable = null;
 
@@ -110,7 +109,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										method.invoke(listener, args);
 								} catch (InvocationTargetException e) {
 										if (e.getCause() instanceof Error) {
-												throw e.getCause();
+												throw (Error) e.getCause();
 										}
 										LOGGER.error(EVENT,
 										             "cannot dispatch {}::{}(...) on {}",
@@ -120,6 +119,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										             e);
 
 										throwable = packThrowables(throwable, e.getCause());
+								} catch (IllegalAccessException e) {
+										throw new InvisibleMethodError(method, e);
 								}
 						}
 
@@ -130,7 +131,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						return null;
 				}
 
-				private Object invokeBoolean(final Method method, final Object[] args) throws Throwable {
+				private Object invokeBoolean(final Method method, final Object[] args) throws InvocationTargetException {
 
 						boolean result = listeners.size() > 0;
 
@@ -141,7 +142,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										result &= (boolean) method.invoke(listener, args);
 								} catch (InvocationTargetException e) {
 										if (e.getCause() instanceof Error) {
-												throw e.getCause();
+												throw (Error) e.getCause();
 										}
 
 										LOGGER.error(EVENT,
@@ -153,6 +154,8 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 										result = false;
 
 										throwable = packThrowables(throwable, e.getCause());
+								} catch (IllegalAccessException e) {
+										throw new InvisibleMethodError(method, e);
 								}
 						}
 
