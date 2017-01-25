@@ -69,7 +69,6 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						this.listeners = listeners;
 				}
 
-				@Nullable
 				private static Throwable packThrowables(@Nullable Throwable existing, @NotNull Throwable thrown) {
 
 						if (existing != null) {
@@ -92,16 +91,16 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 								}
 						} catch (InvocationTargetException ite) {
 								LOGGER.error(EVENT, "cannot dispatch method {}", method.getName(), ite);
-
 								throw ite.getCause();
+						} catch (IllegalAccessException iac) {
+								throw new Error("method became invisible " + method.getName(), iac);
 						}
 
 						throw new UnsupportedOperationException(
 								"cannot invoke method with return type of '" + returnType.getSimpleName() + "'");
 				}
 
-				private Object invokeVoid(final Method method, final Object[] args)
-						throws InvocationTargetException, IllegalAccessException {
+				private Object invokeVoid(final Method method, final Object[] args) throws Throwable {
 
 						Throwable throwable = null;
 
@@ -110,6 +109,9 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 								try {
 										method.invoke(listener, args);
 								} catch (InvocationTargetException e) {
+										if (e.getCause() instanceof Error) {
+												throw e.getCause();
+										}
 										LOGGER.error(EVENT,
 										             "cannot dispatch {}::{}(...) on {}",
 										             listener.getClass().getSimpleName(),
@@ -128,8 +130,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 						return null;
 				}
 
-				private Object invokeBoolean(final Method method, final Object[] args)
-						throws InvocationTargetException, IllegalAccessException {
+				private Object invokeBoolean(final Method method, final Object[] args) throws Throwable {
 
 						boolean result = listeners.size() > 0;
 
@@ -139,6 +140,10 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 								try {
 										result &= (boolean) method.invoke(listener, args);
 								} catch (InvocationTargetException e) {
+										if (e.getCause() instanceof Error) {
+												throw e.getCause();
+										}
+
 										LOGGER.error(EVENT,
 										             "cannot dispatch {}::{}(...) on {}",
 										             listener.getClass().getSimpleName(),
