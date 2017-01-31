@@ -17,7 +17,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class EventListenersBench {
+public class EventListenersBenchTest {
 
 		@Test
 		public void runBench() throws RunnerException, ProfilerException {
