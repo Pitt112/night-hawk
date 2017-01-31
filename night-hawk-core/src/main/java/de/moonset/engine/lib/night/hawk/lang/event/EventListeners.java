@@ -14,11 +14,7 @@ public class EventListeners<E> implements Iterable<E> {
 		private final Collection<E> listeners;
 
 		public EventListeners() {
-				this(8);
-		}
-
-		public EventListeners(final int initialCapacity) {
-				listeners = new CopyOnWriteArraySet<E>();
+				listeners = new CopyOnWriteArraySet<>();
 		}
 
 		@VisibleForTesting

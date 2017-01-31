@@ -30,7 +30,7 @@ public final class ProxyDispatcher<E> implements EventDispatcher<E> {
 		private ProxyDispatcher() { throw new UnsupportedOperationException(); }
 
 		private ProxyDispatcher(Class<E> eventListenerType) {
-				this.listeners = new EventListeners<>(8);
+				this.listeners = new EventListeners<>();
 				this.delegateProxy = createProxy(eventListenerType);
 		}
 
