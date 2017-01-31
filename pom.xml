@@ -7,9 +7,11 @@
    <groupId>de.moonset.engine.lib</groupId>
    <artifactId>night-hawk-parent</artifactId>
    <version>1.0-SNAPSHOT</version>
+
    <modules>
       <module>night-hawk-core</module>
       <module>night-hawk-json-codec</module>
+      <module>night-hawk-perf</module>
    </modules>
 
    <packaging>pom</packaging>
@@ -91,6 +93,20 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.3.0</version>
+            <scope>test</scope>
+         </dependency>
+
+         <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.17.4</version>
+            <scope>test</scope>
+         </dependency>
+
+         <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.17.4</version>
             <scope>test</scope>
          </dependency>
 
