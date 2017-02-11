@@ -112,9 +112,11 @@ public final class Guards {
 
 				@Override
 				public <T> T read(final Supplier<T> op) {
+						final T result;
 						synchronized(lock) {
-								return op.get();
+								result = op.get();
 						}
+						return result;
 				}
 
 				@Override
@@ -126,9 +128,11 @@ public final class Guards {
 
 				@Override
 				public <T> T write(final Supplier<T> op) {
+						final T result;
 						synchronized(lock) {
-								return op.get();
+								result = op.get();
 						}
+						return result;
 				}
 		}
 }
