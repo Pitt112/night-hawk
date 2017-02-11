@@ -1,6 +1,7 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,6 +35,8 @@ public class EventListeners<E> implements Iterable<E> {
 				return listeners.size();
 		}
 
+
+		@NotNull
 		@Override
 		public Iterator<E> iterator() {
 				return listeners.iterator();
