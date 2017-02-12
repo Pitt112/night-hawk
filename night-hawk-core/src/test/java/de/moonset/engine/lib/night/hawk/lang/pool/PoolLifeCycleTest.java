@@ -76,6 +76,14 @@ public class PoolLifeCycleTest {
 						destroyed.incrementAndGet();
 						recycled.incrementAndGet();
 				}
+
+				@OnRecycle
+				@OnDestroy
+				public void onCannotBeInvoked(int unused) {
+						LOGGER.info(POOL, "onCombined");
+						destroyed.incrementAndGet();
+						recycled.incrementAndGet();
+				}
 		}
 
 }
