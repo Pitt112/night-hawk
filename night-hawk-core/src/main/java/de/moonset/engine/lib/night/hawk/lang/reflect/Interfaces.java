@@ -1,7 +1,7 @@
 package de.moonset.engine.lib.night.hawk.lang.reflect;
 
 import com.google.common.base.Preconditions;
-import de.moonset.engine.lib.night.hawk.lang.Utility;
+import de.moonset.engine.lib.night.hawk.lang.util.Utility;
 
 import java.lang.reflect.Method;
 import java.util.stream.Stream;

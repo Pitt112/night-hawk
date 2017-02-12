@@ -1,4 +1,4 @@
-package de.moonset.engine.lib.night.hawk.lang;
+package de.moonset.engine.lib.night.hawk.lang.util;
 
 import org.junit.Test;
 import org.reflections.Reflections;

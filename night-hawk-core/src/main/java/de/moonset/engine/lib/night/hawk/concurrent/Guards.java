@@ -1,7 +1,7 @@
 package de.moonset.engine.lib.night.hawk.concurrent;
 
 import com.google.common.base.Preconditions;
-import de.moonset.engine.lib.night.hawk.lang.Utility;
+import de.moonset.engine.lib.night.hawk.lang.util.Utility;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;

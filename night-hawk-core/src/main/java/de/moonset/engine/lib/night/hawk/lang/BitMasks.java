@@ -1,6 +1,7 @@
 package de.moonset.engine.lib.night.hawk.lang;
 
 import com.google.common.base.Preconditions;
+import de.moonset.engine.lib.night.hawk.lang.util.Utility;
 
 import java.util.EnumSet;
 import java.util.Iterator;

@@ -33,7 +33,7 @@ public class ClassesTest {
 				Class<?>[] a = new Class<?>[] {Boolean.class, int.class, String.class};
 				Class<?>[] b = new Class<?>[] {boolean.class, int.class, String.class};
 
-				assertThat(Classes.isAssignable(a, b)).isTrue();
-				assertThat(Classes.isAssignable(b, a)).isFalse();
+				assertThat(Classes.areAssignable(a, b)).isTrue();
+				assertThat(Classes.areAssignable(b, a)).isFalse();
 		}
 }

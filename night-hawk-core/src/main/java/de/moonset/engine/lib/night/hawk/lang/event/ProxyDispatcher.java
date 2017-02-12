@@ -1,7 +1,7 @@
 package de.moonset.engine.lib.night.hawk.lang.event;
 
 import de.moonset.engine.lib.night.hawk.lang.InvisibleMethodError;
-import de.moonset.engine.lib.night.hawk.lang.Utility;
+import de.moonset.engine.lib.night.hawk.lang.util.Utility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
