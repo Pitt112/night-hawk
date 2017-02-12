@@ -80,7 +80,7 @@ public class PoolLifeCycleTest {
 				@OnRecycle
 				@OnDestroy
 				public void onCannotBeInvoked(int unused) {
-						LOGGER.info(POOL, "onCombined");
+						LOGGER.error(POOL, "onCannotBeInvoked");
 						destroyed.incrementAndGet();
 						recycled.incrementAndGet();
 				}
