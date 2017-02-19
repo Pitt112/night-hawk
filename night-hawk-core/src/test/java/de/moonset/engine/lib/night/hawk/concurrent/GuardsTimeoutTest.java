@@ -93,6 +93,7 @@ public class GuardsTimeoutTest {
 				CountDownLatch start       = new CountDownLatch(1);
 				CountDownLatch started     = new CountDownLatch(1);
 				CountDownLatch stopped     = new CountDownLatch(1);
+				CountDownLatch working     = new CountDownLatch(1);
 
 				Future<?> f = service.submit(() -> {
 						try {
@@ -103,7 +104,7 @@ public class GuardsTimeoutTest {
 						try {
 								started.countDown();
 								impl.run(() -> {
-										Thread.sleep(1000);
+										working.await();
 										success.set(true);
 								}, 1, TimeUnit.DAYS);
 						} catch (InterruptedException e) {
@@ -116,6 +117,7 @@ public class GuardsTimeoutTest {
 				start.countDown();
 				started.await();
 				f.cancel(true);
+				working.countDown();
 				stopped.await();
 				occupy.stop.countDown();
 				occupy.stopped.await();
@@ -134,6 +136,7 @@ public class GuardsTimeoutTest {
 				CountDownLatch start       = new CountDownLatch(1);
 				CountDownLatch started     = new CountDownLatch(1);
 				CountDownLatch stopped     = new CountDownLatch(1);
+				CountDownLatch working     = new CountDownLatch(1);
 
 				Future<?> f = service.submit(() -> {
 						try {
@@ -144,7 +147,7 @@ public class GuardsTimeoutTest {
 						try {
 								started.countDown();
 								impl.apply(() -> {
-										Thread.sleep(1000);
+										working.await();
 										return true;
 								}, 1, TimeUnit.DAYS);
 						} catch (InterruptedException e) {
@@ -157,6 +160,7 @@ public class GuardsTimeoutTest {
 				start.countDown();
 				started.await();
 				f.cancel(true);
+				working.countDown();
 				stopped.await();
 				occupy.stop.countDown();
 				occupy.stopped.await();

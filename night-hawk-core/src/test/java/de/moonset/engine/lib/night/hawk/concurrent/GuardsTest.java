@@ -52,6 +52,7 @@ public class GuardsTest {
 				CountDownLatch start       = new CountDownLatch(1);
 				CountDownLatch started     = new CountDownLatch(1);
 				CountDownLatch stopped     = new CountDownLatch(1);
+				CountDownLatch stopping    = new CountDownLatch(1);
 				Future<?> f = service.submit(() -> {
 						try {
 								start.await();
@@ -60,7 +61,7 @@ public class GuardsTest {
 						}
 						try {
 								started.countDown();
-								impl.accept(() -> Thread.sleep(1000));
+								impl.accept(() -> stopping.await());
 						} catch (InterruptedException e) {
 								interrupted.set(true);
 						} finally {
@@ -89,6 +90,7 @@ public class GuardsTest {
 				CountDownLatch start       = new CountDownLatch(1);
 				CountDownLatch started     = new CountDownLatch(1);
 				CountDownLatch stopped     = new CountDownLatch(1);
+				CountDownLatch stopping    = new CountDownLatch(1);
 
 
 				Future<?> f = service.submit(() -> {
@@ -100,7 +102,7 @@ public class GuardsTest {
 						try {
 								started.countDown();
 								impl.apply(() -> {
-										Thread.sleep(1000);
+										stopping.await();
 										return true;
 								});
 						} catch (InterruptedException e) {
@@ -133,10 +135,7 @@ public class GuardsTest {
 				final AtomicBoolean completed = new AtomicBoolean();
 
 				try {
-						impl.accept(() -> {
-								Thread.sleep(100);
-								completed.set(true);
-						});
+						impl.accept(() -> completed.set(true));
 				} catch (InterruptedException e) {
 						failed.set(true);
 				}
@@ -155,7 +154,6 @@ public class GuardsTest {
 
 				try {
 						boolean tmp = impl.apply(() -> {
-								Thread.sleep(100);
 								completed.set(true);
 								return true;
 						});
