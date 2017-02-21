@@ -35,6 +35,10 @@ public final class Guards {
 				return new SynchronizedGuard(lock);
 		}
 
+		public static Guard newNoSync() {
+				return new NoSyncGuard();
+		}
+
 		private static class ReadWriteLookGuard implements Guard {
 
 				private final Lock read;
@@ -104,8 +108,9 @@ public final class Guards {
 						return Optional.empty();
 				}
 
-				private static <T> Optional<T> lockedTrySupply(InterruptableSupplier<T> op, Lock lock, long timeout, TimeUnit unit)
-						throws InterruptedException {
+				private static <T> Optional<T> lockedTrySupply(
+						InterruptableSupplier<T> op, Lock lock, long timeout, TimeUnit unit
+				) throws InterruptedException {
 						if (lock.tryLock(timeout, unit)) {
 								try {
 										return Optional.ofNullable(op.get());
@@ -116,7 +121,8 @@ public final class Guards {
 						return Optional.empty();
 				}
 
-				private static void lockedRunInterruptibly(final InterruptableRunnable op, final Lock lock) throws InterruptedException {
+				private static void lockedRunInterruptibly(final InterruptableRunnable op, final Lock lock)
+						throws InterruptedException {
 						lock.lockInterruptibly();
 						try {
 								op.run();
@@ -161,7 +167,8 @@ public final class Guards {
 				}
 
 				@Override
-				public boolean tryRead(final InterruptableRunnable op, final long timeout, final TimeUnit unit) throws InterruptedException {
+				public boolean tryRead(final InterruptableRunnable op, final long timeout, final TimeUnit unit)
+						throws InterruptedException {
 						return lockedTryRun(op, read, timeout, unit);
 				}
 
@@ -262,6 +269,97 @@ public final class Guards {
 								result = op.get();
 						}
 						return result;
+				}
+		}
+
+
+		private static class NoSyncGuard implements Guard {
+				@Override
+				public void read(final Runnable op) {
+						op.run();
+				}
+
+				@Override
+				public <T> T read(final Supplier<T> op) {
+						return op.get();
+				}
+
+				@Override
+				public void write(final Runnable op) {
+						op.run();
+				}
+
+				@Override
+				public <T> T write(final Supplier<T> op) {
+						return op.get();
+				}
+
+				@Override
+				public void readInterruptibly(final InterruptableRunnable op) throws InterruptedException {
+						op.run();
+				}
+
+				@Override
+				public <T> T readInterruptibly(final InterruptableSupplier<T> op) throws InterruptedException {
+						return op.get();
+				}
+
+				@Override
+				public boolean tryRead(final Runnable op) {
+						op.run();
+						return true;
+				}
+
+				@Override
+				public <T> Optional<T> tryRead(final Supplier<T> op) {
+						return Optional.ofNullable(op.get());
+				}
+
+				@Override
+				public boolean tryRead(final InterruptableRunnable op, final long timeout, final TimeUnit unit)
+						throws InterruptedException {
+						op.run();
+						return true;
+				}
+
+				@Override
+				public <T> Optional<T> tryRead(final InterruptableSupplier<T> op, final long timeout, final TimeUnit unit)
+						throws InterruptedException {
+						return Optional.ofNullable(op.get());
+				}
+
+				@Override
+				public void writeInterruptibly(final InterruptableRunnable op) throws InterruptedException {
+						op.run();
+				}
+
+				@Override
+				public <T> T writeInterruptibly(final InterruptableSupplier<T> op) throws InterruptedException {
+						return op.get();
+				}
+
+				@Override
+				public boolean tryWrite(final Runnable op) {
+						op.run();
+						return true;
+				}
+
+				@Override
+				public <T> Optional<T> tryWrite(final Supplier<T> op) {
+						return Optional.ofNullable(op.get());
+				}
+
+				@Override
+				public boolean tryWrite(final InterruptableRunnable op, final long timeout, final TimeUnit unit)
+						throws InterruptedException {
+						op.run();
+						return true;
+				}
+
+				@Override
+				public <T> Optional<T> tryWrite(final InterruptableSupplier<T> op, final long timeout, final TimeUnit unit)
+						throws InterruptedException {
+						return Optional.ofNullable(op.get());
 				}
 		}
 }
