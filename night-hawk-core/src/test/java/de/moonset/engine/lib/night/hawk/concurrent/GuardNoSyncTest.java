@@ -75,7 +75,7 @@ public class GuardNoSyncTest {
 		public void tryReadRun() throws Exception {
 				AtomicBoolean success = new AtomicBoolean();
 
-				assertThat(newGuard().tryRead(() -> success.set(true)));
+				assertThat(newGuard().tryRead(() -> success.set(true))).isTrue();
 				assertThat(success.get()).isTrue();
 		}
 
@@ -90,7 +90,7 @@ public class GuardNoSyncTest {
 		public void tryWriteRun() throws Exception {
 				AtomicBoolean success = new AtomicBoolean();
 
-				assertThat(newGuard().tryWrite(() -> success.set(true)));
+				assertThat(newGuard().tryWrite(() -> success.set(true))).isTrue();
 				assertThat(success.get()).isTrue();
 		}
 
@@ -105,7 +105,7 @@ public class GuardNoSyncTest {
 		public void tryReadRunTiimeout() throws Exception {
 				AtomicBoolean success = new AtomicBoolean();
 
-				assertThat(newGuard().tryRead(() -> success.set(true), 100, TimeUnit.MILLISECONDS));
+				assertThat(newGuard().tryRead(() -> success.set(true), 100, TimeUnit.MILLISECONDS)).isTrue();
 				assertThat(success.get()).isTrue();
 		}
 
@@ -120,7 +120,7 @@ public class GuardNoSyncTest {
 		public void tryWriteRunTiimeout() throws Exception {
 				AtomicBoolean success = new AtomicBoolean();
 
-				assertThat(newGuard().tryWrite(() -> success.set(true), 100, TimeUnit.MILLISECONDS));
+				assertThat(newGuard().tryWrite(() -> success.set(true), 100, TimeUnit.MILLISECONDS)).isTrue();
 				assertThat(success.get()).isTrue();
 		}
 
