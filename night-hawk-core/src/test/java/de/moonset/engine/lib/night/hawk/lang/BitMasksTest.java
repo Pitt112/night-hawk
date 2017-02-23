@@ -42,6 +42,12 @@ public class BitMasksTest {
 		}
 
 		@Test
+		public void toSetNonStrict() throws Exception {
+				final Set<TestEnum> flags = BitMasks.toSet(TestEnum.class, 0b100010101, false);
+				assertThat(flags).containsOnly(TestEnum.ADD, TestEnum.REMOVE, TestEnum.CREATE, TestEnum.UPDATE);
+		}
+
+		@Test
 		public void toBitMask() throws Exception {
 				final long bitMask = BitMasks.toBitMask(TestEnum.ADD);
 				assertThat(bitMask).isEqualTo(1L);

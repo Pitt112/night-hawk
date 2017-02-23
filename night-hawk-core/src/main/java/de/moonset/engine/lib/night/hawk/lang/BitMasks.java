@@ -13,6 +13,8 @@ import java.util.Set;
 @Utility
 public final class BitMasks {
 
+		private static final String MAY_NOT_BE_NULL = "%s may not be null";
+
 		private BitMasks() { throw new UnsupportedOperationException(); }
 
 		public static <E extends Enum<E> & BitMaskFlag> Set<E> toSet(Class<E> type, long bitmask) {
@@ -60,45 +62,45 @@ public final class BitMasks {
 
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1) {
 
-				Preconditions.checkNotNull(e1, "e1 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e1");
 
 				return e1.value();
 		}
 
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1, E e2) {
 
-				Preconditions.checkNotNull(e1, "e1 may not be null");
-				Preconditions.checkNotNull(e2, "e2 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e1");
+				Preconditions.checkNotNull(e2, MAY_NOT_BE_NULL, "e2");
 
 				return e1.value() | e2.value();
 		}
 
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1, E e2, E e3) {
 
-				Preconditions.checkNotNull(e1, "e1 may not be null");
-				Preconditions.checkNotNull(e2, "e2 may not be null");
-				Preconditions.checkNotNull(e3, "e3 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e1");
+				Preconditions.checkNotNull(e2, MAY_NOT_BE_NULL, "e2");
+				Preconditions.checkNotNull(e3, MAY_NOT_BE_NULL, "e3");
 
 				return e1.value() | e2.value() | e3.value();
 		}
 
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1, E e2, E e3, E e4) {
 
-				Preconditions.checkNotNull(e1, "e1 may not be null");
-				Preconditions.checkNotNull(e2, "e2 may not be null");
-				Preconditions.checkNotNull(e3, "e3 may not be null");
-				Preconditions.checkNotNull(e4, "e4 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e1");
+				Preconditions.checkNotNull(e2, MAY_NOT_BE_NULL, "e2");
+				Preconditions.checkNotNull(e3, MAY_NOT_BE_NULL, "e3");
+				Preconditions.checkNotNull(e4, MAY_NOT_BE_NULL, "e4");
 
 				return e1.value() | e2.value() | e3.value() | e4.value();
 		}
 
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1, E e2, E e3, E e4, E e5) {
 
-				Preconditions.checkNotNull(e1, "e1 may not be null");
-				Preconditions.checkNotNull(e2, "e2 may not be null");
-				Preconditions.checkNotNull(e3, "e3 may not be null");
-				Preconditions.checkNotNull(e4, "e4 may not be null");
-				Preconditions.checkNotNull(e5, "e5 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e1");
+				Preconditions.checkNotNull(e2, MAY_NOT_BE_NULL, "e2");
+				Preconditions.checkNotNull(e3, MAY_NOT_BE_NULL, "e3");
+				Preconditions.checkNotNull(e4, MAY_NOT_BE_NULL, "e4");
+				Preconditions.checkNotNull(e5, MAY_NOT_BE_NULL, "e5");
 
 				return e1.value() | e2.value() | e3.value() | e4.value() | e5.value();
 		}
@@ -106,7 +108,7 @@ public final class BitMasks {
 		@SafeVarargs
 		public static <E extends Enum<E> & BitMaskFlag> long toBitMask(E e1, E... rest) {
 
-				Preconditions.checkNotNull(e1, "e4 may not be null");
+				Preconditions.checkNotNull(e1, MAY_NOT_BE_NULL, "e4");
 				Preconditions.checkNotNull(rest, "rest may not be null");
 
 				long bitmask = e1.value();
